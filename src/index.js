@@ -45,7 +45,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    let timerId = null;
+
+    timerId = setTimeout(() => {
       if (
         messageList.length !== 0 &&
         messageList[messageList.length - 1].author !== nameChatBot
@@ -60,23 +62,12 @@ const App = () => {
         ]);
       }
     }, 2000);
+
+    return () => clearInterval(timerId);
   }, [messageList]);
 
   const addMessage = (event) => {
-    if (
-      event.target.value === "" && (event.key === "Enter" || event.type === "click")
-    ) {
-      alert("Введете сообщение");
-      return;
-    }
-
     if (event.key === "Enter" || event.type === "click") {
-      var btn = document.getElementById("sendMessage");
-      btn.disabled = true;
-      window.setTimeout(() => {
-        btn.disabled = false;
-      }, 2500);
-
       setMessageList([
         ...messageList,
         {

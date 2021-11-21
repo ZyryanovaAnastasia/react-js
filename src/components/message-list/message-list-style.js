@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-export const messageListStyle = makeStyles(() => ({
+export const messageListStyle = makeStyles((context) => ({
   chat: {
     padding: '50px 200px',
   },
@@ -22,6 +22,10 @@ export const messageListStyle = makeStyles(() => ({
   },
   input: {
     flexGrowl: "4",
+  },
+  iconSend:{
+    cursor: "pointer",
+    color: `${context.palette.primary.main}`
   },
   sendMessage: {
     flexGrowl: "1",

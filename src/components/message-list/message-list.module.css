@@ -1,0 +1,69 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: "Comfortaa", cursive;
+}
+
+#app {
+  padding: 50px 200px;
+}
+
+#titleEmptyChat {
+  width: 100%;
+  text-align: center;
+}
+
+#emptyPhoto {
+  display: block;
+  margin: 20px auto;
+}
+
+.messageList {
+  width: 100%;
+}
+
+#message {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.clientMessage {
+  text-align: left;
+  background-color: rgb(255 232 232);
+  margin: 5px 60% 0 0;
+}
+
+.botMessage {
+  text-align: right;
+  background-color: rgb(204 204 204);
+  margin: 0 0 0 60%;
+}
+
+#author {
+  font-style: italic;
+}
+
+#text {
+  font-size: larger;
+  margin: 10px 0;
+}
+
+#time {
+  font-size: small;
+}
+
+#wrapperInput {
+  margin: 10px 0;
+  display: flex;
+  height: 35px;
+}
+
+.input {
+  flex-grow: 4;
+}
+
+#sendMessage {
+  flex-grow: 1;
+}

@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@mui/material";
-import styles from "./message-list.module.css";
+import { Input, InputAdornment } from "@mui/material";
+import { Send } from "@mui/icons-material";
+import { messageListStyle } from "./message-list-style";
+import { Message } from "./message";
 
 const nameChatBot = "Сhat-bot";
 
 const EmptyList = () => {
+  const style = messageListStyle();
   return (
-    <div className={styles.emptyList}>
-      <h3 id={styles.titleEmptyChat}>
+    <div className={style.emptyList}>
+      <h3 className={style.titleEmptyChat}>
         Чат пустой. Отправьте первое сообщение.
       </h3>
       <img
         src="/img/emptyChat.jpg"
         alt="logo"
-        id={styles.emptyPhoto}
+        className={style.emptyPhoto}
         width="200px"
         height="300px"
       />
@@ -22,27 +25,18 @@ const EmptyList = () => {
 };
 
 const MessageList = ({ messageList }) => {
+  const style = messageListStyle();
   return (
-    <div className={styles.messageList}>
+    <div className={style.messageList}>
       {messageList.map(({ text, author, time }) => (
-        <div
-          id={styles.message}
-          className={
-            author === nameChatBot
-              ? `${styles.botMessage}`
-              : `${styles.clientMessage}`
-          }
-        >
-          <div id={styles.author}>{author}</div>
-          <div id={styles.text}>{text}</div>
-          <div id={styles.time}>{time}</div>
-        </div>
+        <Message text={text} author={author} time={time} />
       ))}
     </div>
   );
 };
 
 export const Chat = () => {
+  const style = messageListStyle();
   const [newMessageText, setNewMessageText] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -73,7 +67,7 @@ export const Chat = () => {
   }, [messageList]);
 
   const addMessage = (event) => {
-    if (event.key === "Enter" || event.type === "click") {
+    if ((event.key === "Enter" || event.type === "click") && newMessageText) {
       setMessageList([
         ...messageList,
         {
@@ -91,28 +85,26 @@ export const Chat = () => {
   };
 
   return (
-    <div id={styles.app}>
+    <div className={style.chat}>
       {Object.keys(messageList).length !== 0 ? (
         <MessageList messageList={messageList} />
       ) : (
         <EmptyList />
       )}
-      <div id={styles.wrapperInput}>
-        <input
+      <div className={style.wrapperInput}>
+        <Input
           placeholder="Введите сообщение"
           onChange={handleChangeValue}
           value={newMessageText}
-          className={styles.input}
+          className={style.input}
           onKeyDown={addMessage}
-          required
+          fullWidth
+          endAdornment={
+            <InputAdornment position="end">
+              <Send className={style.iconSend} onClick={addMessage} />
+            </InputAdornment>
+          }
         />
-        <Button
-          onClick={addMessage}
-          id={styles.sendMessage}
-          variant="contained"
-        >
-          Отправить
-        </Button>
       </div>
     </div>
   );

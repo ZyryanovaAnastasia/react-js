@@ -28,25 +28,25 @@ const MessageList = ({ messageList }) => {
   return (
     <div className={style.messageList}>
       {messageList.map(({ text, author, time }, index) => (
-        <Message text={text} author={author} time={time} key={index}/>
+        <Message text={text} author={author} time={time} key={index} />
       ))}
     </div>
   );
 };
 
-export const Chat = () => {
+export const DialogBox = () => {
   const style = messageListStyle();
   const [newMessageText, setNewMessageText] = useState("");
   const [messageList, setMessageList] = useState([]);
 
-  const btnSend = useRef(null);
+  const inputTxt = useRef(null);
 
   const getTime = () => {
     return new Date().toLocaleTimeString().slice(0, -3);
   };
 
   useEffect(() => {
-    btnSend.current.autofocus = true;
+    inputTxt.current.autofocus = true;
   }, [newMessageText]);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export const Chat = () => {
       )}
       <div className={style.wrapperInput}>
         <Input
-          ref={btnSend}
+          ref={inputTxt}
           autoFocus={true}
           placeholder="Введите сообщение"
           onChange={handleChangeValue}

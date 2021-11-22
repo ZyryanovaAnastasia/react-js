@@ -2,33 +2,44 @@ import { makeStyles } from "@mui/styles";
 
 export const messageListStyle = makeStyles((context) => ({
   chat: {
-    padding: '50px 200px',
+    width: "70%",
+    display: "flex",
+    height: "80VH",
+    flexWrap: "wrap",
+  },
+  emptyList: {
+    display: "flex",
+    flexWrap: "wrap",
+    width: "100%",
   },
   titleEmptyChat: {
-    width: '100%',
-    textAlign: 'center',
+    width: "100%",
+    textAlign: "center",
+    alignSelf: "center",
   },
   emptyPhoto: {
-    display: 'block',
-    margin: '20px auto',
-  },  
+    display: "block",
+    margin: "20px auto",
+  },
   messageList: {
-    width: '100%',
+    width: "100%",
+    maxHeight: "100%",
+    overflow: "auto",
+    padding: "0 10px 0 0 !important",
   },
   wrapperInput: {
-    margin: "10px 0",
-    display: "flex",
+    width: "100%",
     height: "35px",
+    alignSelf: "flex-end",
   },
   input: {
-    flexGrowl: "4",
+    height: "50px",
   },
-  iconSend:{
+  iconSend: {
     cursor: "pointer",
-    color: `${context.palette.primary.main}`
+    color: `${context.palette.primary.main}`,
   },
   sendMessage: {
     flexGrowl: "1",
   },
-  }));
-  
+}));

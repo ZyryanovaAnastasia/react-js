@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Input, InputAdornment } from "@mui/material";
+import { Input, InputAdornment, List } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { messageListStyle } from "./message-list-style";
 import { Message } from "./message";
+
 const nameChatBot = "Сhat-bot";
 
 const EmptyList = () => {
@@ -26,11 +27,11 @@ const EmptyList = () => {
 const MessageList = ({ messageList }) => {
   const style = messageListStyle();
   return (
-    <div className={style.messageList}>
+    <List className={style.messageList}>
       {messageList.map(({ text, author, time }, index) => (
         <Message text={text} author={author} time={time} key={index} />
       ))}
-    </div>
+    </List>
   );
 };
 

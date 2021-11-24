@@ -1,3 +1,4 @@
+import { Link, useParams} from "react-router-dom";
 import { List } from "@mui/material";
 import { ChatItem } from "./chat";
 import { useStyles } from "./chat-list-style";
@@ -10,11 +11,14 @@ const chatListValue = [
 
 export const ChatList = () => {
   const style = useStyles();
+  const {chatId} = useParams();
 
   return (
     <List className={style.chatList}>
       {chatListValue.map(({ id, fullName }) => (
-        <ChatItem fullName={fullName} key={id} />
+        <Link to={`${id}`} key={id}>
+          <ChatItem fullName={fullName} selected={id === chatId}/>
+        </Link>
       ))}
     </List>
   );

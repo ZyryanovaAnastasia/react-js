@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-export const messageListStyle = makeStyles((context) => ({
+export const useStyles = makeStyles((context) => ({
   chat: {
     width: "70%",
     display: "flex",

@@ -1,9 +1,6 @@
 import { ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
 
-export const ChatElm = ({ fullName }) => {
-  if (!fullName) {
-    fullName = "Anonymous";
-  }
+export const ChatItem = ({ fullName = "Anonymous" }) => {
   return (
     <div>
       <ListItem>

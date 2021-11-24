@@ -1,6 +1,6 @@
 import { List } from "@mui/material";
-import { ChatElm } from "./chat";
-import { chatListStyle } from "./chat-list-style";
+import { ChatItem } from "./chat";
+import { useStyles } from "./chat-list-style";
 
 const chatListValue = [
   { id: 1, fullName: "Федор Петрович" },
@@ -9,12 +9,12 @@ const chatListValue = [
 ];
 
 export const ChatList = () => {
-  const style = chatListStyle();
+  const style = useStyles();
 
   return (
     <List className={style.chatList}>
       {chatListValue.map(({ id, fullName }) => (
-        <ChatElm fullName={fullName} key={id} />
+        <ChatItem fullName={fullName} key={id} />
       ))}
     </List>
   );

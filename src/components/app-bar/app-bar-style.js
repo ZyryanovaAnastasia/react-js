@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-export const barStyle = makeStyles((context) => ({
+export const useStyles = makeStyles((context) => ({
   barWrapper: {
     width: "100%",
     backgroundColor: `${context.palette.primary.main}`,

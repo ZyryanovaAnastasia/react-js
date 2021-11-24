@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Input, InputAdornment, List } from "@mui/material";
 import { Send } from "@mui/icons-material";
-import { messageListStyle } from "./message-list-style";
+import { useStyles } from "./message-list-style";
 import { Message } from "./message";
 
 const nameChatBot = "Сhat-bot";
 
 const EmptyList = () => {
-  const style = messageListStyle();
+  const style = useStyles();
   return (
     <div className={style.emptyList}>
       <h3 className={style.titleEmptyChat}>
@@ -25,7 +25,7 @@ const EmptyList = () => {
 };
 
 const MessageList = ({ messageList }) => {
-  const style = messageListStyle();
+  const style = useStyles();
   return (
     <List className={style.messageList}>
       {messageList.map(({ text, author, time }, index) => (
@@ -36,7 +36,7 @@ const MessageList = ({ messageList }) => {
 };
 
 export const DialogBox = () => {
-  const style = messageListStyle();
+  const style = useStyles();
   const [newMessageText, setNewMessageText] = useState("");
   const [messageList, setMessageList] = useState([]);
 

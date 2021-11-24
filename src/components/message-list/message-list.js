@@ -26,8 +26,14 @@ const EmptyList = () => {
 
 const MessageList = ({ messageList }) => {
   const style = useStyles();
+  const refWrapper = useRef(null);
+
+  useEffect(() => {
+    refWrapper.current.scrollTo(0, refWrapper.current.scrollHeight);
+  }, [messageList]);
+
   return (
-    <List className={style.messageList}>
+    <List className={style.messageList} ref={refWrapper}>
       {messageList.map(({ text, author, time }, index) => (
         <Message text={text} author={author} time={time} key={index} />
       ))}
@@ -97,6 +103,7 @@ export const DialogBox = () => {
       ) : (
         <EmptyList />
       )}
+
       <div className={style.wrapperInput}>
         <Input
           ref={inputTxt}

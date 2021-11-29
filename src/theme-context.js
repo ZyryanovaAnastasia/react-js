@@ -1,10 +1,23 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material";
 
-export const ThemContext = createContext();
+export const ThemaContext = createContext();
 
 const themes = {
-  dark: {},
-  light: {},
+  dark: createTheme({
+    palette: {
+      primary: {
+        main: "#d17272",
+      },
+    },
+  }),
+  light: createTheme({
+    palette: {
+      primary: {
+        main: "#0000ff",
+      },
+    },
+  }),
 };
 
 export const CustomThemeProvider = ({ children, initialTheme = "light" }) => {
@@ -13,8 +26,18 @@ export const CustomThemeProvider = ({ children, initialTheme = "light" }) => {
     name: initialTheme,
   });
 
-  const  themeSetter = 
+  const themeSetter = useCallback((name) => {
+    if (themes[name]) {
+      setTheme({
+        name,
+        theme: themes[name],
+      });
+    }
+  }, []);
+
   return (
-    <ThemContext.Provider value={{ theme }}>{children}</ThemContext.Provider>
+    <ThemaContext.Provider value={{ theme, themeSetter }}>
+      <ThemeProvider theme={themes[theme.name]}>{children}</ThemeProvider>
+    </ThemaContext.Provider>
   );
 };

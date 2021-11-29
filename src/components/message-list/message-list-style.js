@@ -37,7 +37,7 @@ export const useStyles = makeStyles((context) => ({
   },
   iconSend: {
     cursor: "pointer",
-    color: `${context.palette.primary.main}`,
+    color: `blue`,
   },
   sendMessage: {
     flexGrowl: "1",

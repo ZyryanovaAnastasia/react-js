@@ -1,7 +1,8 @@
 import { messageStyle } from "./message-style";
+import { withCounter } from "../../../hocs/with-counter";
 import classnames from "classnames";
 
-export const Message = ({ text, author, time }) => {
+export const Message = withCounter(({ text, author, time }) => {
   const styles = messageStyle();
   const classMessage = classnames(`${styles.message}`, {
     [styles.botMessage]: author === "Сhat-bot",
@@ -15,4 +16,4 @@ export const Message = ({ text, author, time }) => {
       <div className={styles.time}>{time}</div>
     </div>
   );
-};
+});

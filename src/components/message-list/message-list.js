@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import { Input, InputAdornment, List } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useStyles } from "./message-list-style";
@@ -26,8 +27,14 @@ const EmptyList = () => {
 
 const MessageList = ({ messageList }) => {
   const style = useStyles();
+  const refWrapper = useRef(null);
+
+  useEffect(() => {
+    refWrapper.current.scrollTo(0, refWrapper.current.scrollHeight);
+  }, [messageList]);
+
   return (
-    <List className={style.messageList}>
+    <List className={style.messageList} ref={refWrapper}>
       {messageList.map(({ text, author, time }, index) => (
         <Message text={text} author={author} time={time} key={index} />
       ))}
@@ -38,7 +45,8 @@ const MessageList = ({ messageList }) => {
 export const DialogBox = () => {
   const style = useStyles();
   const [newMessageText, setNewMessageText] = useState("");
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState({});
+  const { chatId } = useParams();
 
   const inputTxt = useRef(null);
 
@@ -46,57 +54,63 @@ export const DialogBox = () => {
     return new Date().toLocaleTimeString().slice(0, -3);
   };
 
+  const addMessage = useCallback(
+    (author = "User", botMessage) => {
+      if (
+        newMessageText ||
+        botMessage
+      ) {
+        setMessageList({
+          ...messageList,
+          [chatId]: [
+            ...(messageList[chatId] ?? []),
+            { author, text: newMessageText || botMessage, time: getTime() },
+          ],
+        });
+        setNewMessageText("");
+      }
+    },
+    [newMessageText, messageList, chatId]
+  );
+
   useEffect(() => {
     inputTxt.current.autofocus = true;
   }, [newMessageText]);
 
   useEffect(() => {
     let timerId = null;
+    const chatMessages = messageList[chatId] ?? [];
+    const lastMessage = chatMessages[chatMessages.length - 1];
 
-    timerId = setTimeout(() => {
-      if (
-        messageList.length !== 0 &&
-        messageList[messageList.length - 1].author !== nameChatBot
-      ) {
-        setMessageList([
-          ...messageList,
-          {
-            author: nameChatBot,
-            text: "Ваше сообщение отправлено",
-            time: getTime(),
-          },
-        ]);
-      }
-    }, 2000);
+    if (chatMessages.length && lastMessage.author !== nameChatBot) {
+      timerId = setTimeout(() => {
+        addMessage(nameChatBot, "Ваше сообщение отправлено");
+      }, 2000);
+    }
 
     return () => clearInterval(timerId);
-  }, [messageList]);
-
-  const addMessage = (event) => {
-    if ((event.key === "Enter" || event.type === "click") && newMessageText) {
-      setMessageList([
-        ...messageList,
-        {
-          author: "Anonymous",
-          text: newMessageText,
-          time: getTime(),
-        },
-      ]);
-      setNewMessageText("");
-    }
-  };
+  }, [messageList, chatId, addMessage]);
 
   const handleChangeValue = (event) => {
     setNewMessageText(event.target.value);
   };
 
+  const handlePressInput = ({ code }) => {
+    if (code === "Enter") {
+      addMessage();
+    }
+  };
+
+  const chatMessages = messageList[chatId] ?? [];
+
   return (
     <div className={style.chat}>
-      {Object.keys(messageList).length !== 0 ? (
-        <MessageList messageList={messageList} />
+      {Object.keys(chatMessages).length !== 0 ? (
+        <MessageList messageList={chatMessages} />
       ) : (
         <EmptyList />
       )}
+
       <div className={style.wrapperInput}>
         <Input
           ref={inputTxt}
@@ -105,7 +119,7 @@ export const DialogBox = () => {
           onChange={handleChangeValue}
           value={newMessageText}
           className={style.input}
-          onKeyDown={addMessage}
+          onKeyPress={handlePressInput}
           fullWidth
           endAdornment={
             <InputAdornment position="end">

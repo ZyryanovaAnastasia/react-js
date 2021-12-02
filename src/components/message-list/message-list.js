@@ -4,6 +4,8 @@ import { Input, InputAdornment, List } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useStyles } from "./message-list-style";
 import { Message } from "./message";
+import { messagesSelector, sendMessage } from "../../store/messages";
+import { useDispatch, useSelector } from "react-redux";
 
 const nameChatBot = "Сhat-bot";
 
@@ -45,8 +47,9 @@ const MessageList = ({ messageList }) => {
 export const DialogBox = () => {
   const style = useStyles();
   const [newMessageText, setNewMessageText] = useState("");
-  const [messageList, setMessageList] = useState({});
   const { chatId } = useParams();
+  const messages = useSelector(messagesSelector(chatId));
+  const dispatch = useDispatch();
 
   const inputTxt = useRef(null);
 
@@ -56,21 +59,12 @@ export const DialogBox = () => {
 
   const addMessage = useCallback(
     (author = "User", botMessage) => {
-      if (
-        newMessageText ||
-        botMessage
-      ) {
-        setMessageList({
-          ...messageList,
-          [chatId]: [
-            ...(messageList[chatId] ?? []),
-            { author, text: newMessageText || botMessage, time: getTime() },
-          ],
-        });
+      if (newMessageText || botMessage) {
+        dispatch(sendMessage({ author, text: newMessageText || botMessage, time: getTime() }, chatId));
         setNewMessageText("");
       }
     },
-    [newMessageText, messageList, chatId]
+    [newMessageText, chatId, dispatch]
   );
 
   useEffect(() => {
@@ -79,21 +73,16 @@ export const DialogBox = () => {
 
   useEffect(() => {
     let timerId = null;
-    const chatMessages = messageList[chatId] ?? [];
-    const lastMessage = chatMessages[chatMessages.length - 1];
+    const lastMessage = messages[messages.length - 1];
 
-    if (chatMessages.length && lastMessage.author !== nameChatBot) {
+    if (messages.length && lastMessage.author !== nameChatBot) {
       timerId = setTimeout(() => {
         addMessage(nameChatBot, "Ваше сообщение отправлено");
       }, 2000);
     }
 
     return () => clearInterval(timerId);
-  }, [messageList, chatId, addMessage]);
-
-  const handleChangeValue = (event) => {
-    setNewMessageText(event.target.value);
-  };
+  }, [messages, chatId, addMessage]);
 
   const handlePressInput = ({ code }) => {
     if (code === "Enter") {
@@ -101,22 +90,19 @@ export const DialogBox = () => {
     }
   };
 
-  const chatMessages = messageList[chatId] ?? [];
-
   return (
     <div className={style.chat}>
-      {Object.keys(chatMessages).length !== 0 ? (
-        <MessageList messageList={chatMessages} />
+      {Object.keys(messages).length !== 0 ? (
+        <MessageList messageList={messages} />
       ) : (
         <EmptyList />
       )}
 
-      <div className={style.wrapperInput}>
-        <Input
+      <Input
           ref={inputTxt}
           autoFocus={true}
           placeholder="Введите сообщение"
-          onChange={handleChangeValue}
+          onChange={(e) => setNewMessageText(e.target.value)}
           value={newMessageText}
           className={style.input}
           onKeyPress={handlePressInput}
@@ -126,8 +112,7 @@ export const DialogBox = () => {
               <Send className={style.iconSend} onClick={addMessage} />
             </InputAdornment>
           }
-        />
-      </div>
+        /> 
     </div>
   );
 };

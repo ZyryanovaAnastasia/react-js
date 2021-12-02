@@ -1,7 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
 export const useStyles = makeStyles((context) => {
-  console.log(context)
   return {
     barWrapper: {
       width: "100%",

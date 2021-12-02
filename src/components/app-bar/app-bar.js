@@ -24,7 +24,6 @@ const BtnThema = ({ nameBtn }) => {
 export const Header = (context) => {
   const countMessage = useSelector((state) => state.profile.countMessage);
   const style = useStyles();
-  console.log(context);
 
   return (
     <Box className={style.barWrapper}>

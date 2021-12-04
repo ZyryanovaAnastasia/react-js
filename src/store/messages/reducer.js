@@ -25,10 +25,6 @@ export const messagesReducer = (state = initialState, action) => {
       };
 
     case DELETE_MESSAGE:
-
-      console.log('messageId '+action.payload.messageId);
-      console.log(state.messages[action.payload.chatId].filter((message) => message.author === "Сhat-bot"));
-    
       return {
         ...state,
         messages: {

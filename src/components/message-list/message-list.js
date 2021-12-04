@@ -28,8 +28,7 @@ const EmptyList = () => {
   );
 };
 
-const MessageList = ({ messageList }) => {
-  console.log(messageList);
+const MessageList = ({ messageList, chatId }) => {
   const style = useStyles();
   const refWrapper = useRef(null);
 
@@ -46,6 +45,7 @@ const MessageList = ({ messageList }) => {
           time={time}
           messageId={id}
           key={id}
+          chatId={chatId}
         />
       ))}
     </List>

@@ -1,13 +1,11 @@
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
 import { messageStyle } from "./message-style";
 import classnames from "classnames";
 import { deleteMessage } from "../../../store/messages";
 
-export const Message = ({ text, author, time, messageId }) => {
+export const Message = ({ text, author, time, messageId, chatId }) => {
   const styles = messageStyle();
   const dispatch = useDispatch();
-  const { chatId } = useParams();
   const classMessage = classnames(`${styles.message}`, {
     [styles.botMessage]: author === "Сhat-bot",
     [styles.clientMessage]: author !== "Сhat-bot",

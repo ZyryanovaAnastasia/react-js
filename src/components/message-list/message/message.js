@@ -1,19 +1,28 @@
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { messageStyle } from "./message-style";
-import { withCounter } from "../../../hocs/with-counter";
 import classnames from "classnames";
+import { deleteMessage } from "../../../store/messages";
 
-export const Message = withCounter(({ text, author, time }) => {
+export const Message = ({ text, author, time, messageId }) => {
   const styles = messageStyle();
+  const dispatch = useDispatch();
+  const { chatId } = useParams();
   const classMessage = classnames(`${styles.message}`, {
     [styles.botMessage]: author === "Сhat-bot",
     [styles.clientMessage]: author !== "Сhat-bot",
   });
+
+  const deleteMessageById = () => {
+    dispatch(deleteMessage(messageId, chatId));
+  };
 
   return (
     <div className={classMessage}>
       <div className={styles.author}>{author}</div>
       <div className={styles.text}>{text}</div>
       <div className={styles.time}>{time}</div>
+      <button onClick={deleteMessageById}>удалить</button>
     </div>
   );
-});
+};

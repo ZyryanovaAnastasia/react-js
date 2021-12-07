@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, InputAdornment, List } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useStyles } from "./message-list-style";
 import { Message } from "./message";
-import { messagesSelector, sendMessage } from "../../store/messages";
-import { conversationsSelector } from "../../store/conversations";
-
-const nameChatBot = "Сhat-bot";
+import { messagesSelector, sendMessageWithBot } from "../../store/messages";
+import {
+  conversationsSelector,
+  messageValueSelector,
+  handleChangeMessageValue,
+} from "../../store/conversations";
 
 const EmptyList = () => {
   const style = useStyles();
@@ -28,7 +30,7 @@ const EmptyList = () => {
   );
 };
 
-const MessageList = ({ messageList, chatId }) => {
+const MessageList = ({ messageList, chatId, dispatch }) => {
   const style = useStyles();
   const refWrapper = useRef(null);
 
@@ -46,6 +48,7 @@ const MessageList = ({ messageList, chatId }) => {
           messageId={id}
           key={id}
           chatId={chatId}
+          dispatch={dispatch}
         />
       ))}
     </List>
@@ -54,8 +57,8 @@ const MessageList = ({ messageList, chatId }) => {
 
 export const DialogBox = () => {
   const style = useStyles();
-  const [newMessageText, setNewMessageText] = useState("");
   const { chatId } = useParams();
+  const value = useSelector(messageValueSelector(chatId));
   const messages = useSelector(messagesSelector(chatId));
   const conversations = useSelector(conversationsSelector);
   const dispatch = useDispatch();
@@ -64,33 +67,17 @@ export const DialogBox = () => {
   const inputTxt = useRef(null);
 
   const addMessage = useCallback(
-    (author = "User", botMessage) => {
-      if (newMessageText || botMessage) {
-        dispatch(
-          sendMessage({ author, text: newMessageText || botMessage }, chatId)
-        );
-        setNewMessageText("");
+    (author = "User") => {
+      if (value) {
+        dispatch(sendMessageWithBot({ author, text: value }, chatId));
       }
     },
-    [newMessageText, chatId, dispatch]
+    [value, chatId, dispatch]
   );
 
   useEffect(() => {
     inputTxt.current.autofocus = true;
-  }, [newMessageText]);
-
-  useEffect(() => {
-    let timerId = null;
-    const lastMessage = messages[messages.length - 1];
-
-    if (messages.length && lastMessage.author !== nameChatBot) {
-      timerId = setTimeout(() => {
-        addMessage(nameChatBot, "Ваше сообщение отправлено");
-      }, 2000);
-    }
-
-    return () => clearInterval(timerId);
-  }, [messages, chatId, addMessage]);
+  }, [value]);
 
   useEffect(() => {
     const isValidRoomId = conversations.some(({ id }) => {
@@ -110,7 +97,11 @@ export const DialogBox = () => {
   return (
     <div className={style.chat}>
       {Object.keys(messages).length !== 0 ? (
-        <MessageList messageList={messages} chatId={chatId} />
+        <MessageList
+          messageList={messages}
+          chatId={chatId}
+          dispatch={dispatch}
+        />
       ) : (
         <EmptyList />
       )}
@@ -119,8 +110,10 @@ export const DialogBox = () => {
         ref={inputTxt}
         autoFocus={true}
         placeholder="Введите сообщение"
-        onChange={(e) => setNewMessageText(e.target.value)}
-        value={newMessageText}
+        onChange={(e) =>
+          dispatch(handleChangeMessageValue(e.target.value, chatId))
+        }
+        value={value}
         className={style.input}
         onKeyPress={handlePressInput}
         fullWidth

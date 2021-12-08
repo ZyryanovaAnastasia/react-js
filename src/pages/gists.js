@@ -1,0 +1,11 @@
+import * as React from "react";
+import { ListGists } from "../components";
+
+export function Gists() {
+  return (
+    <div>
+      <h1>Gists</h1>
+      <ListGists />
+    </div>
+  );
+}

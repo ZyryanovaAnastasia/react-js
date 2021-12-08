@@ -10,7 +10,7 @@ import { ThemaContext } from "../../theme-context";
 
 const BtnThema = ({ nameBtn }) => {
   const {
-    theme: { theme, name },
+    theme: { name },
     themeSetter,
   } = useContext(ThemaContext);
 
@@ -59,6 +59,7 @@ export const Header = (context) => {
                 <AccountCircle />
               </IconButton>
             </Link>
+            <Link to="/gits">GITS</Link>
           </Box>
         </Toolbar>
       </>

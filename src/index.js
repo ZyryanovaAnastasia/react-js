@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { Header } from "./components";
-import { ChatPage, ProfilePage } from "./pages";
+import { ChatPage, ProfilePage, Gists } from "./pages";
 import { CustomThemeProvider } from "./theme-context";
 import { store, persistor } from "./store";
 import "./index.css";
@@ -23,6 +23,7 @@ ReactDOM.render(
               <Routes>
                 <Route path="/chat/*" element={<ChatPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/gits" element={<Gists />} />
               </Routes>
             </BrowserRouter>
           </CustomThemeProvider>

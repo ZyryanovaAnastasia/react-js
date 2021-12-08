@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-export const messageStyle = makeStyles(() => ({
+export const useStyles = makeStyles(() => ({
   message: {
     padding: "10px",
     borderRadius: "10px",
@@ -25,4 +25,7 @@ export const messageStyle = makeStyles(() => ({
   time: {
     fontSize: "small",
   },
+  notShowBtnEdit: {
+    visibility: "hidden",
+  }
 }));

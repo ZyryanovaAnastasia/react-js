@@ -12,5 +12,5 @@ export const deleteMessage = (messageId, chatId) => ({
 
 export const editMessage = (messageId, chatId, newText) => ({
   type: EDIT_MESSAGE,
-  payload: { messageId, chatId, newText},
+  payload: { messageId, chatId, newText },
 });

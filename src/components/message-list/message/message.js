@@ -1,6 +1,6 @@
+import { useSelector } from "react-redux";
 import { useStyles } from "./message-style";
 import classnames from "classnames";
-import { deleteMessage, editMessage } from "../../../store/messages";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -13,6 +13,11 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import {
+  deleteMessage,
+  editMessage,
+  messageTextSelector,
+} from "../../../store/messages";
 
 export const Message = ({
   text,
@@ -33,7 +38,8 @@ export const Message = ({
   });
 
   const [openModal, setOpenModal] = useState(false);
-  const [newMessage, setNewMessage] = useState("");
+  const message = useSelector(messageTextSelector(messageId, chatId));
+  const [newMessage, setNewMessage] = useState(message);
 
   const handleClickOpen = () => {
     setOpenModal(true);
@@ -46,7 +52,6 @@ export const Message = ({
   };
   const editMessageById = (newText) => {
     dispatch(editMessage(messageId, chatId, newText));
-    setNewMessage("");
   };
 
   return (
@@ -71,7 +76,7 @@ export const Message = ({
           <TextField
             autoFocus
             id="newMessage"
-            label="Введите сообщение.."
+            label="Введите новое сообщение.."
             fullWidth
             variant="standard"
             onChange={(e) => {

@@ -9,7 +9,7 @@ const InputSearch = () => {
   const search = ({ code }) => {
     if (code === "Enter") {
       dispatch(searchGistsByUserName(searchText));
-      setSearchText();
+      setSearchText("");
     }
   };
   const handleChangeValue = (e) => {
@@ -29,8 +29,6 @@ export const ListGistsBySearch = () => {
   const { gistsSearch, gistsLoadingSearch, gistsErrorSearch } =
     useSelector(gistSelector);
 
-  const [isVisibleList, setIsVisibleList] = useState(false);
-
   if (gistsErrorSearch) {
     return (
       <div>
@@ -48,17 +46,13 @@ export const ListGistsBySearch = () => {
       ) : (
         <ul>
           <h4>Результат поиска</h4>
-          {isVisibleList ? (
-            <div>
-              {gistsSearch.map((gist, index) => (
-                <li key={index}>
-                  <a href={`${gist.url}`}>{`${gist.url}`}</a>
-                </li>
-              ))}
-            </div>
-          ) : (
-            <div>Введите значение для поиска</div>
-          )}
+          <div>
+            {gistsSearch.map((gist, index) => (
+              <li key={index}>
+                <a href={`${gist.url}`}>{`${gist.url}`}</a>
+              </li>
+            ))}
+          </div>
         </ul>
       )}
     </div>

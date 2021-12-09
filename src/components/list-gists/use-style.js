@@ -8,8 +8,11 @@ export const useStyles = makeStyles(() => ({
   item: {
     width: "300px !important",
   },
+  progressLoader: {
+    margin: "0 auto",
+  },
   pagination: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
   },
 }));

@@ -11,6 +11,7 @@ import {
   Box,
   Pagination,
 } from "@mui/material";
+import ReplayIcon from "@mui/icons-material/Replay";
 import { getGists, gistSelector } from "../../store/gists";
 import { useStyles } from "./use-style";
 
@@ -24,14 +25,21 @@ export const ListGists = () => {
   }, [dispatch]);
 
   if (gistsError) {
-    return <h2>gistsError</h2>;
+    return (
+      <div>
+        <h2>gistsError</h2>
+        <button onClick={(e) => dispatch(getGists())}>
+          Повторить 
+        </button>
+      </div>
+    );
   }
 
   return (
     <div>
       {gistsLoading ? (
         <Box sx={{ display: "flex" }}>
-          <CircularProgress />
+          <CircularProgress className={styles.progressLoader}/>
         </Box>
       ) : (
         <div className={styles.container}>

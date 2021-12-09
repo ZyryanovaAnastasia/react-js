@@ -5,7 +5,7 @@ export function Gists() {
   return (
     <div>
       <h1>Gists</h1>
-      {/* <ListGists /> */}
+      <ListGists />
       <ListGistsBySearch />
     </div>
   );

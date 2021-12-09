@@ -6,7 +6,7 @@ import { profileReducer } from "./profile";
 import { conversationReducer } from "./conversations";
 import { messagesReducer } from "./messages";
 import { logger, timeScheduler } from "./middlewares";
-import { getGistsApi } from "../api/gists";
+import { getGistsApi,searchGistsByNameApi } from "../api/gists";
 import { gistsReducer } from "./gists";
 
 const persistConfig = {
@@ -28,7 +28,7 @@ export const store = createStore(
     applyMiddleware(
       timeScheduler,
       logger,
-      thunk.withExtraArgument({ getGistsApi })
+      thunk.withExtraArgument({ getGistsApi, searchGistsByNameApi })
     ),
     window.__REDUX_DEVTOOLS_EXTENSION__
       ? window.__REDUX_DEVTOOLS_EXTENSION__()

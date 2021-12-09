@@ -11,7 +11,6 @@ import {
   Box,
   Pagination,
 } from "@mui/material";
-import ReplayIcon from "@mui/icons-material/Replay";
 import { getGists, gistSelector } from "../../store/gists";
 import { useStyles } from "./use-style";
 

@@ -1,5 +1,4 @@
 export const gistSelector = (state) => {
-    console.log("AAA");
-    console.log(state.gits);
+  // console.log(state);
   return state.gits;
 };

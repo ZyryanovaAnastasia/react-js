@@ -1,11 +1,12 @@
 import * as React from "react";
-import { ListGists } from "../components";
+import { ListGists, ListGistsBySearch } from "../components";
 
 export function Gists() {
   return (
     <div>
       <h1>Gists</h1>
-      <ListGists />
+      {/* <ListGists /> */}
+      <ListGistsBySearch />
     </div>
   );
 }

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Input, InputAdornment, List } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useStyles } from "./message-list-style";
 import { Message } from "./message";
+import { messagesSelector, sendMessage } from "../../store/messages";
+import { conversationsSelector } from "../../store/conversations";
 
 const nameChatBot = "Сhat-bot";
 
@@ -25,7 +28,7 @@ const EmptyList = () => {
   );
 };
 
-const MessageList = ({ messageList }) => {
+const MessageList = ({ messageList, chatId }) => {
   const style = useStyles();
   const refWrapper = useRef(null);
 
@@ -35,8 +38,15 @@ const MessageList = ({ messageList }) => {
 
   return (
     <List className={style.messageList} ref={refWrapper}>
-      {messageList.map(({ text, author, time }, index) => (
-        <Message text={text} author={author} time={time} key={index} />
+      {messageList.map(({ author, text, time, id }) => (
+        <Message
+          text={text}
+          author={author}
+          time={time}
+          messageId={id}
+          key={id}
+          chatId={chatId}
+        />
       ))}
     </List>
   );
@@ -45,32 +55,24 @@ const MessageList = ({ messageList }) => {
 export const DialogBox = () => {
   const style = useStyles();
   const [newMessageText, setNewMessageText] = useState("");
-  const [messageList, setMessageList] = useState({});
   const { chatId } = useParams();
+  const messages = useSelector(messagesSelector(chatId));
+  const conversations = useSelector(conversationsSelector);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const inputTxt = useRef(null);
 
-  const getTime = () => {
-    return new Date().toLocaleTimeString().slice(0, -3);
-  };
-
   const addMessage = useCallback(
     (author = "User", botMessage) => {
-      if (
-        newMessageText ||
-        botMessage
-      ) {
-        setMessageList({
-          ...messageList,
-          [chatId]: [
-            ...(messageList[chatId] ?? []),
-            { author, text: newMessageText || botMessage, time: getTime() },
-          ],
-        });
+      if (newMessageText || botMessage) {
+        dispatch(
+          sendMessage({ author, text: newMessageText || botMessage }, chatId)
+        );
         setNewMessageText("");
       }
     },
-    [newMessageText, messageList, chatId]
+    [newMessageText, chatId, dispatch]
   );
 
   useEffect(() => {
@@ -79,21 +81,25 @@ export const DialogBox = () => {
 
   useEffect(() => {
     let timerId = null;
-    const chatMessages = messageList[chatId] ?? [];
-    const lastMessage = chatMessages[chatMessages.length - 1];
+    const lastMessage = messages[messages.length - 1];
 
-    if (chatMessages.length && lastMessage.author !== nameChatBot) {
+    if (messages.length && lastMessage.author !== nameChatBot) {
       timerId = setTimeout(() => {
         addMessage(nameChatBot, "Ваше сообщение отправлено");
       }, 2000);
     }
 
     return () => clearInterval(timerId);
-  }, [messageList, chatId, addMessage]);
+  }, [messages, chatId, addMessage]);
 
-  const handleChangeValue = (event) => {
-    setNewMessageText(event.target.value);
-  };
+  useEffect(() => {
+    const isValidRoomId = conversations.some(({ id }) => {
+      return +id === +chatId;
+    });
+    if (!isValidRoomId && chatId) {
+      navigate("/chat");
+    }
+  }, [chatId, conversations, navigate]);
 
   const handlePressInput = ({ code }) => {
     if (code === "Enter") {
@@ -101,33 +107,29 @@ export const DialogBox = () => {
     }
   };
 
-  const chatMessages = messageList[chatId] ?? [];
-
   return (
     <div className={style.chat}>
-      {Object.keys(chatMessages).length !== 0 ? (
-        <MessageList messageList={chatMessages} />
+      {Object.keys(messages).length !== 0 ? (
+        <MessageList messageList={messages} chatId={chatId} />
       ) : (
         <EmptyList />
       )}
 
-      <div className={style.wrapperInput}>
-        <Input
-          ref={inputTxt}
-          autoFocus={true}
-          placeholder="Введите сообщение"
-          onChange={handleChangeValue}
-          value={newMessageText}
-          className={style.input}
-          onKeyPress={handlePressInput}
-          fullWidth
-          endAdornment={
-            <InputAdornment position="end">
-              <Send className={style.iconSend} onClick={addMessage} />
-            </InputAdornment>
-          }
-        />
-      </div>
+      <Input
+        ref={inputTxt}
+        autoFocus={true}
+        placeholder="Введите сообщение"
+        onChange={(e) => setNewMessageText(e.target.value)}
+        value={newMessageText}
+        className={style.input}
+        onKeyPress={handlePressInput}
+        fullWidth
+        endAdornment={
+          <InputAdornment position="end">
+            <Send className={style.iconSend} onClick={addMessage} />
+          </InputAdornment>
+        }
+      />
     </div>
   );
 };

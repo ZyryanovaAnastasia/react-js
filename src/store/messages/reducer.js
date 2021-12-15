@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { SEND_MESSAGE, DELETE_MESSAGE } from "./types";
+import { SEND_MESSAGE, DELETE_MESSAGE, EDIT_MESSAGE } from "./types";
 import { DELETE_CONVERSATION } from "../types";
 
 const initialState = {
@@ -34,6 +34,22 @@ export const messagesReducer = (state = initialState, action) => {
           ),
         },
       };
+
+    case EDIT_MESSAGE:
+      return {
+        ...state,
+        messages: {
+          ...state.messages,
+          [action.payload.chatId]: state.messages[action.payload.chatId].map(
+            (message) => {
+              return message.id === action.payload.messageId
+                ? { ...message, text: action.payload.newText }
+                : message;
+            }
+          ),
+        },
+      };
+
     case DELETE_CONVERSATION:
       delete state.messages[action.payload];
       return {
